@@ -90,7 +90,7 @@ The goal of this project is to create an application for tracking users' health 
 
 **Screenshot**:  
 ![Registration Screen](images/Registration.png)
-![Succes Registration](images/Succes_Registration.png)
+![Succes Registration](images/SuccesRegistration.png)
 ![JohnDoe inJSON](images/JohnDoe_inJSON.png)
 ![Home Window](images/HomeWindow.png)
 
