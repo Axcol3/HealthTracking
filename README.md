@@ -61,6 +61,8 @@ The goal of this project is to create an application for tracking users' health 
 - **Database**: a module for working with user files, password hashing, and saving data.
 - **isValid**: a module for input validation (e.g., checking password correctness).
 - **MainLabel**: the main module that handles the graphical interface, including the login and registration screens.
+- **HomeLabel**: the module for handling the user's home screen after login, including updating user data, exporting history, and user management.
+  - The `HomeLabel` class provides a home screen after the user logs in. It allows users to update their personal data (weight, height, blood type, activity level), manage their accounts (update name, password, or delete the account), and save their history. It also manages the display of a popup for data updates, ensuring users are prompted to update their information only once a day.
 
 ### Problems Encountered:
 - Issues with correctly reading and writing data to JSON files.
@@ -87,7 +89,10 @@ The goal of this project is to create an application for tracking users' health 
 - Data file saved in the directory: `Users/JohnDoe.json`.
 
 **Screenshot**:  
-[Insert screenshot of registration screen]
+![Registration Screen](images/Registration.png)
+![Succes Registration](images/Succes_Registration.png)
+![JohnDoe inJSON](images/JohnDoe_inJSON.png)
+![Home Window](images/HomeWindow.png)
 
 ---
 
@@ -100,7 +105,7 @@ The goal of this project is to create an application for tracking users' health 
 - Error: Incorrect username or password.
 
 **Screenshot**:  
-[Insert screenshot of login error message]
+![Registration Screen](images/Error_Login.png)
 
 ---
 
@@ -113,7 +118,9 @@ The goal of this project is to create an application for tracking users' health 
 - User data updated, new information saved in JSON file.
 
 **Screenshot**:  
-[Insert screenshot of updated user data]
+![Update Data](images/Update_Data.png)
+![Succes Update](images/Succes_Update.png)
+![After Update](images/AfterUpdate.png)
 
 ---
 
@@ -126,4 +133,4 @@ The project code consists of several classes responsible for different functions
 - **Person**: a structure for storing user data.
 - **isValid**: a module for validating user inputs.
 - **Error**: a module for displaying error messages.
-
+- **HomeLabel**: handles the user home screen with the ability to update personal data, export history, and manage the user's account.
