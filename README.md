@@ -124,6 +124,22 @@ The goal of this project is to create an application for tracking users' health 
 
 ---
 
+
+### Example 4: Exporting User History
+**Input**:
+- Username: JohnDoe
+
+**Output**:
+- User history file saved as `history.json`.
+- A message confirming the file save path is shown.
+
+**Screenshot**:  
+![Save Data](images/SaveData.png)
+![Success Save](images/SuccessSave.png)
+
+---
+
+
 ## 5. Code
 
 The project code consists of several classes responsible for different functions:
