@@ -150,3 +150,6 @@ The project code consists of several classes responsible for different functions
 - **isValid**: a module for validating user inputs.
 - **Error**: a module for displaying error messages.
 - **HomeLabel**: handles the user home screen with the ability to update personal data, export history, and manage the user's account.
+
+
+## Presentation: https://www.canva.com/design/DAGlFWd8RzY/URkbgI2kG2l4MqyUH_WZJg/edit?utm_content=DAGlFWd8RzY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
