@@ -6,6 +6,7 @@ import org.example.lib.isValid;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.json.JSONObject;
+import javax.swing.table.DefaultTableModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,22 +24,20 @@ public class HomeLabel {
     String storedPassword;
     String storedName;
     String name;
-    int activity; // User's activity level
+    int activity;
 
-    // Constructor. This runs when the user logs in.
     public HomeLabel(String userName) {
-        Person currentUser = loadUserFromFile(userName); // Load user info from file
+        Person currentUser = loadUserFromFile(userName);
         name = userName;
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close the window when user exits
-        frame.setSize(800, 600); // Set window size
-        frame.setLocationRelativeTo(null); // Center window
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout());
 
-        LocalDate today = LocalDate.now(); // Get today's date
-        LocalDate lastShownDate = readLastShownDate(); // Get last date when popup was shown
+        LocalDate today = LocalDate.now();
+        LocalDate lastShownDate = readLastShownDate();
 
-        // Button to save user's history to a file
         JButton historyButton = new JButton("History");
         historyButton.addActionListener(e -> {
             String userFilePath = "/Users/alina/Desktop/ex/src/main/java/org/example/lib/Users/" + userName + ".json";
@@ -58,9 +57,8 @@ public class HomeLabel {
                 }
             }
         });
-        frame.add(historyButton, BorderLayout.SOUTH); // Add button to bottom of window
+        frame.add(historyButton, BorderLayout.SOUTH);
 
-        // Show popup only if today's date is different from last shown date
         if (!today.equals(lastShownDate)) {
             JPanel updatePanel = new JPanel();
             updatePanel.setLayout(new BoxLayout(updatePanel, BoxLayout.Y_AXIS));
@@ -75,6 +73,13 @@ public class HomeLabel {
             JLabel heightLabel = new JLabel("Height (cm):");
             JLabel activityLabel = new JLabel("Activity level:");
 
+            if (currentUser != null) {
+                bloodField.setText(currentUser.getBlood());
+                weightField.setText(currentUser.getWeight());
+                heightField.setText(currentUser.getHeight());
+                activity = Integer.parseInt(currentUser.getActivity());
+            }
+
             JButton saveButton = new JButton("Save");
 
             saveButton.addActionListener(e -> {
@@ -86,10 +91,8 @@ public class HomeLabel {
                 int control = 0;
                 control = validator.checkIsNumber(blood) + validator.checkIsNumber(weight) + validator.checkIsNumber(height) + validator.checkIsNumber(String.valueOf(activity));
 
-                // Check if all fields are filled correctly
                 if (!blood.isEmpty() && !weight.isEmpty() && !height.isEmpty() && activity > 0) {
                     if (currentUser != null) {
-                        // Update user data
                         currentUser.setBlood(blood);
                         currentUser.setWeight(weight);
                         currentUser.setHeight(height);
@@ -97,12 +100,12 @@ public class HomeLabel {
                         currentUser.setName(userName);
 
                         currentUser.addHistory("Updated user: " + userName);
-                        currentUser.setLastUpdated(today); // Save today's date
+                        currentUser.setLastUpdated(today);
 
-                        db.saveUser(currentUser); // Save user to file
+                        db.saveUser(currentUser);
 
                         JOptionPane.showMessageDialog(frame, "Data updated!");
-                        frame.remove(updatePanel); // Remove update form
+                        frame.remove(updatePanel);
                         frame.revalidate();
                         frame.repaint();
 
@@ -124,20 +127,18 @@ public class HomeLabel {
             updatePanel.add(heightField);
             updatePanel.add(activityLabel);
 
-            // Buttons to choose activity level
             JPanel panel4 = new JPanel(new FlowLayout());
 
             JButton active = new JButton("Active");
             JButton averageActive = new JButton("Average");
             JButton noActive = new JButton("Inactive");
 
-            Color defaultColor = active.getBackground(); // Remember default color
+            Color defaultColor = active.getBackground();
 
             panel4.add(active);
             panel4.add(averageActive);
             panel4.add(noActive);
 
-            // Set color and activity when a button is clicked
             active.addActionListener(e -> {
                 resetButtonColors(active, averageActive, noActive, defaultColor);
                 active.setBackground(Color.GREEN);
@@ -160,7 +161,7 @@ public class HomeLabel {
             updatePanel.add(saveButton);
 
             frame.add(updatePanel, BorderLayout.CENTER);
-            saveCurrentDate(today); // Save today's date to file
+            saveCurrentDate(today);
         } else {
             JLabel label = new JLabel("Welcome " + name, SwingConstants.CENTER);
             currentUser.addHistory("Login success");
@@ -169,18 +170,36 @@ public class HomeLabel {
             frame.add(label, BorderLayout.CENTER);
         }
 
-        Home(); // Create right panel with buttons
-        frame.setVisible(true); // Show window
+        showUserTable(currentUser);
+
+        Home();
+        frame.setVisible(true);
     }
 
-    // Reset the button colors to default
+    private void showUserTable(Person currentUser) {
+        String[] columnNames = {"Attribute", "Value"};
+        Object[][] data = {
+                {"Name", currentUser.getName()},
+                {"Blood Type", currentUser.getBlood()},
+                {"Weight", currentUser.getWeight()},
+                {"Height", currentUser.getHeight()},
+                {"Activity Level", currentUser.getActivity()}
+        };
+
+        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+        JTable table = new JTable(model);
+        table.setFillsViewportHeight(true);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        frame.add(scrollPane, BorderLayout.CENTER);
+    }
+
     private void resetButtonColors(JButton a, JButton b, JButton c, Color color) {
         a.setBackground(color);
         b.setBackground(color);
         c.setBackground(color);
     }
 
-    // Load user from JSON file
     private static Person loadUserFromFile(String userName) {
         String userFilePath = "/Users/alina/Desktop/ex/src/main/java/org/example/lib/Users/" + userName + ".json";
         File userFile = new File(userFilePath);
@@ -198,7 +217,6 @@ public class HomeLabel {
         return null;
     }
 
-    // Read the last date when popup was shown
     private static LocalDate readLastShownDate() {
         try {
             Path path = Paths.get(LAST_POPUP_FILE);
@@ -210,7 +228,6 @@ public class HomeLabel {
         }
     }
 
-    // Save today's date to the file
     private static void saveCurrentDate(LocalDate date) {
         try {
             Files.writeString(Paths.get(LAST_POPUP_FILE), date.toString());
@@ -219,7 +236,6 @@ public class HomeLabel {
         }
     }
 
-    // Create right-side panel with buttons to update/delete user
     public void Home() {
         String filePath = "/Users/alina/Desktop/ex/src/main/java/org/example/lib/Users/" + name + ".json";
         isValid validator = new isValid();
@@ -238,7 +254,6 @@ public class HomeLabel {
         mainPanel.setBackground(Color.WHITE);
         Person currentUser = loadUserFromFile(name);
 
-        // Button to update password
         JButton updatePassword = new JButton("Update Password");
         updatePassword.addActionListener(e -> {
             JPanel panel = new JPanel(new GridLayout(3, 2));
@@ -267,7 +282,6 @@ public class HomeLabel {
             }
         });
 
-        // Button to update name
         JButton updateName = new JButton("Update Name");
         updateName.addActionListener(e -> {
             String newName = JOptionPane.showInputDialog(frame, "Enter new username:");
@@ -280,21 +294,19 @@ public class HomeLabel {
             }
         });
 
-        // Button to delete user
         JButton deleteUser = new JButton("Delete User");
         deleteUser.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete this user?", "Confirm", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 db.deleteUserFile(name);
-                frame.dispose(); // Close the window
+                frame.dispose();
             }
         });
 
-        // Add all buttons to right-side panel
         mainPanel.add(updatePassword);
         mainPanel.add(updateName);
         mainPanel.add(deleteUser);
-        frame.add(mainPanel, BorderLayout.EAST); // Add on the right
+        frame.add(mainPanel, BorderLayout.EAST);
         frame.revalidate();
         frame.repaint();
     }
