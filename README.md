@@ -32,7 +32,7 @@ The goal of this project is to create an application for tracking users' health 
 8. Allow users to update their personal data through the interface.
 9. Allow users to delete their account through the interface.
 10. Keep a history of changes made to the user data.
-
+11. On Home Window you can read your current data.
 ---
 
 ## 3. Documentation
